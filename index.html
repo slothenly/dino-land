@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>title</title>
+    </head>
+    <body>
+        <div class="subset">
+            <button type="button" id="button">Add Dino</button>
+            <div id="dino-counter">
+                <p>Current Dinos:</p>
+                <p id="dino-count">0</p>
+            </div>
+        </div>
+        <div class="subset">
+            <button type="button" class="dino-farm" id="one-farm" data-added="1 ">Add 1 Dino Farm</button>
+            <button type="button" class="dino-farm" id="five-farm" data-added="5">Add 5 Dino Farms</button>
+            <button type="button" class="dino-farm" id="ten-farm" data-added="10">Add 10 Dino Farm</button>
+
+            <button type="button" class="dino-farm" id="one-less" data-removed="1">Add 10 Dino Farm</button>
+            <button type="button" class="dino-farm" id="five-less" data-removed="5">Add 10 Dino Farm</button>
+            <button type="button" class="dino-farm" id="ten-less" data-removed="10">Add 10 Dino Farm</button>
+
+            <div>
+                <p>Current Dinos:</p>
+                <p id="dino-count-2"></p>
+                <p>Current Dinos Per Second:</p>
+                <p id="dino-count-3">0</p>
+            </div>
+        </div>
+    </body>
+    <script>
+        /* Pulling info and setting up variables */
+        let addDino = document.querySelector("#button");
+        let dinoCount = document.querySelector("#dino-count");
+        let currentDinos = 0;
+
+        let addDinoFarm1 = document.querySelector("#one-farm");
+        let addDinoFarm5 = document.querySelector("#five-farm");
+        let addDinoFarm10 = document.querySelector("#ten-farm");
+
+        let dinoCount2 = document.querySelector("#dino-count-2");
+        let dinoCounter = document.querySelector("#dino-count-3");
+        let currentDinoCount = 0;
+        let dinosPerSec = 0;
+
+        /* Event Listeners */
+        addDinoFarm1.addEventListener("click", increaseDPS);
+        addDinoFarm5.addEventListener("click", increaseDPS);
+        addDinoFarm10.addEventListener("click", increaseDPS);
+
+        addDino.addEventListener("click", plusDinos);
+
+        /* Functions */
+        /* Adds one dino per click */
+        function plusDinos(e, howMany = 1){
+            currentDinos += howMany;
+            dinoCount.innerHTML = `${currentDinos}`;
+        }
+
+        /* Adds however many dinos are in dinosPerSec */
+        function plusDinoFarm(){
+            currentDinoCount += 1;
+            dinoCount2.innerHTML = `${currentDinoCount}`;
+        }
+
+        /* Removes dinos based on button's cost */
+        function plusDinoFarmLarge(){
+            currentDinoCount += dinosPerSec/1000;
+            dinoCount2.innerHTML = `${Math.round(currentDinoCount)}`;
+        }
+
+        /* Increase dinosPerSecond to adjust  */
+
+        function increaseDPS(e){
+            console.log(e.target.dataset.added);
+            dinosPerSec += parseFloat(e.target.dataset.added);
+            dinoCounter.innerHTML = `${dinosPerSec}`;
+
+            console.log(dinosPerSec);
+            dinoCounter.innerHTML = `${dinosPerSec}`;
+
+            /* Adjust the interval to account for dinos currently being created per second */
+            clearInterval(currentInterval);
+            if (dinosPerSec < 1000){
+                currentInterval = setInterval(plusDinoFarm, (1000/dinosPerSec));
+            }
+            else{
+                currentInterval = setInterval(plusDinoFarmLarge, 1);
+            }
+        }
+
+        let currentInterval = setInterval(plusDinoFarm, 10000000000);
+    </script>
+</html>
