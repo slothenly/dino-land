@@ -1,0 +1,22 @@
+/* CSS */
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* Main Structure */
+.flex-columns{
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.buyables, .play-area{
+    background-color: red;
+    height: 200px;
+    width: 200px;
+}
+.test{
+    width: 100px;
+    height: 100px;
+    background-color: aqua;
+}
