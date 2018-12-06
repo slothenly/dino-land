@@ -10,16 +10,58 @@
     justify-content: space-between;
     height: 100%;
     width: 100%;
-    position: absolute
+    position: absolute;
 }
 
-.buyables, .play-area{
-    background-color: red;
-    height: 100%;
-    width: 200px;
+.full-width{
+    width: 100%;
 }
-.test{
-    width: 100px;
+
+/* Banner */
+#title-banner{
+    width: 40%;
+    display: block;
+    margin: auto;
+    margin-top: 1em;
+}
+
+/* Buyables */
+
+.buyables, .play-area{
+    height: 100%;
+}
+
+.buyables-column{
+    background-color: antiquewhite;
+    flex-grow: 1;
+}
+
+.buyables-individual{
+    width: 70%;
     height: 100px;
     background-color: aqua;
+    margin: auto;
+    margin-top: 1em;
+    display: flex;
 }
+
+.buyables-title{
+    flex-grow: 2;
+    align-self: center;
+    text-align: center;
+}
+
+.buyables-costs{
+    flex-grow: 1;
+    background-color: red;
+    align-self: center;
+    text-align: center;
+}
+
+/* Informational Area */
+
+.play-area{
+    flex-grow: 2;
+}
+
+
