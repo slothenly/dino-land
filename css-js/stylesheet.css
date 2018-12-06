@@ -36,8 +36,18 @@
     flex-grow: 1;
 }
 
+.buyables-container{
+    height: 72%;
+    width: 80%;
+    margin: auto;
+    margin-top: 1em;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+}
+
 .buyables-individual{
-    width: 70%;
+    width: 90%;
     height: 100px;
     background-color: aqua;
     margin: auto;
@@ -46,13 +56,13 @@
 }
 
 .buyables-title{
-    flex-grow: 2;
+    flex-grow: 3;
     align-self: center;
     text-align: center;
 }
 
 .buyables-costs{
-    flex-grow: 1;
+    flex-grow: 2;
     background-color: red;
     align-self: center;
     text-align: center;
