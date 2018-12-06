@@ -8,11 +8,14 @@
 .flex-columns{
     display: inline-flex;
     justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    position: absolute
 }
 
 .buyables, .play-area{
     background-color: red;
-    height: 200px;
+    height: 100%;
     width: 200px;
 }
 .test{
