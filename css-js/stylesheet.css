@@ -2,9 +2,10 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: 'Inconsolata', monospace;
 }
 
-/* Main Structure */
+/* Main Structure or Shared Structure*/
 .flex-columns{
     display: inline-flex;
     justify-content: space-between;
@@ -17,6 +18,10 @@
     width: 100%;
 }
 
+.buyables, .play-area{
+    height: 100%;
+}
+
 /* Banner */
 #title-banner{
     width: 40%;
@@ -27,13 +32,8 @@
 
 /* Buyables */
 
-.buyables, .play-area{
-    height: 100%;
-}
-
 .buyables-column{
-    background-color: antiquewhite;
-    flex-grow: 1;
+    width: 70%;
 }
 
 .buyables-container{
@@ -44,12 +44,14 @@
     border-style: solid;
     border-width: 2px;
     border-color: black;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .buyables-individual{
     width: 90%;
     height: 100px;
-    background-color: aqua;
+    background-color: #EFEFEF;
     margin: auto;
     margin-top: 1em;
     display: flex;
@@ -72,6 +74,47 @@
 
 .play-area{
     flex-grow: 2;
+    padding: 1% 2%;
+    height: 70%;
+    /*background-color: lightcoral;*/
 }
 
+.play-block{
+    margin-top: 1em;
+}
 
+.play-stat, .play-info{
+    display: inline-block;
+}
+
+.play-info{
+    font-weight: bold;
+}
+
+.play-bonuses{
+    margin-top: 2em;
+    width: 45%;
+    height: 18em;
+    display: flex;
+    flex-flow: row wrap;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border-style: solid;
+    border-width: 2px;
+    background-color: #EFEFEF;
+}
+
+.play-bonus{
+    margin: 15px;
+    flex-wrap: wrap;
+    font-size: 3em;
+    transition: 0.1s;
+}
+
+.play-bonus:hover{
+    color: darkgrey;
+}
+
+.play-bonus:active{
+    color: grey;
+}
