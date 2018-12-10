@@ -9,7 +9,6 @@
 .flex-columns{
     display: inline-flex;
     justify-content: space-between;
-    height: 100%;
     width: 100%;
     position: absolute;
 }
@@ -18,8 +17,9 @@
     width: 100%;
 }
 
-.buyables, .play-area{
-    height: 100%;
+.buyables-column, .play-area{
+    width: 30%;
+    padding: 0 1em;
 }
 
 /* Banner */
@@ -32,13 +32,8 @@
 
 /* Buyables */
 
-.buyables-column{
-    width: 70%;
-}
-
 .buyables-container{
     height: 72%;
-    width: 80%;
     margin: auto;
     margin-top: 1em;
     border-style: solid;
@@ -46,15 +41,21 @@
     border-color: black;
     overflow-x: hidden;
     overflow-y: scroll;
+    flex-grow: 1;
+}
+
+.buyables-column{
+    height: auto;
 }
 
 .buyables-individual{
-    width: 90%;
+    width: 85%;
     height: 100px;
     background-color: #EFEFEF;
     margin: auto;
     margin-top: 1em;
     display: flex;
+    padding: 0 1em;
 }
 
 .buyables-title{
@@ -65,18 +66,24 @@
 
 .buyables-costs{
     flex-grow: 2;
-    background-color: red;
     align-self: center;
     text-align: center;
+}
+
+.cost{
+    background-color: lightcoral;
+}
+
+.benefit{
+    background-color: lightgreen;
 }
 
 /* Informational Area */
 
 .play-area{
-    flex-grow: 2;
+    flex-grow: 1;
     padding: 1% 2%;
     height: 70%;
-    /*background-color: lightcoral;*/
 }
 
 .play-block{
@@ -92,9 +99,8 @@
 }
 
 .play-bonuses{
-    margin-top: 2em;
-    width: 45%;
-    height: 18em;
+    margin-top: 1em;
+    height: 28ex;
     display: flex;
     flex-flow: row wrap;
     overflow-x: hidden;
@@ -117,4 +123,17 @@
 
 .play-bonus:active{
     color: grey;
+}
+
+.play-bonus-title{
+    margin-top: 2em;
+}
+
+/* Console Entries */
+#console{
+    overflow-y: hidden;
+}
+
+.console-entries{
+    padding: 2em 1.5em;
 }
