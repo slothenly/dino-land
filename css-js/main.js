@@ -1,12 +1,10 @@
 /* JavaScript */
 
-// Variables to keep track of
-let dinos = 0;
-let scales = 0;
-let dps = 0;
-let sps = 0;
-let dpsScalar = 1;
-let spsScalar = 1;
+// Main variables to keep track of and modify
+let dinos = 0;      //amount of dinos the player currently has
+let scales = 0;     //amount of dino scales the player currently has
+let dps = 0;        //dinos generated per second
+let sps = 0;        //scales generated per second
 
 // Get references to specific nodes to adjust and append to
 let buyablesParentNode = document.querySelector("#buyables-parent");
@@ -96,12 +94,11 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
     buyablesParentNode.appendChild(buyablesIndividual);
 }
 
-// Main Functions
-/* Functions */
+// Dino Adding/Subtracting Functions #region
 /* Adds one dino per click */
 function addDinosManual(e, howMany=1){
     dinos += howMany;
-    updateVisuals(e);
+    updateVisuals();
 }
 
 function addDinosAutomatic(e, howMany=1){
@@ -112,6 +109,14 @@ function addDinosAutomatic(e, howMany=1){
 function addDinosLarge(e, howMany=1){
     dinos += dps/100;
     updateVisuals(e);
+}
+
+function addScalesAutomatic(e, howMany=1){
+    scales += howMany/10;
+}
+
+function addScalesLarge(e){
+
 }
 
 /* Adds however many dinos are in dinosPerSec */
@@ -136,14 +141,19 @@ function addDPS(e){
     // Change the visual display for the user
     updateVisuals(e);
 
-    // Reset the interval based on new numbers
+    // Reset the intervals based on new numbers
     if(dps < 100){
-        currentInterval = setInterval(addDinosAutomatic, (100/dps));
+        currentDinoInterval = setInterval(addDinosAutomatic, (100/dps));
+    }else{
+        currentDinoInterval = setInterval(addDinosLarge, 10);
     }
-    else{
-        currentInterval = setInterval(addDinosLarge, 10);
+    if(sps < 100){
+        currentScaleInterval = setInterval(addScalesAutomatic, (100/sps));
+    }else{
+        currentDinoInterval = setInterval(addScalesLarge, 10);
     }
 }
+// #endregion
 
 /* Update the Screen values */
 function updateVisuals(e){
@@ -168,4 +178,5 @@ function updateVisuals(e){
     }
 }
 
-let currentInterval = setInterval(addDinosAutomatic, 10000000000);
+let currentDinoInterval = setInterval(addDinosAutomatic, 10000000000);
+let currentScaleInterval = setInterval(addScalesAutomatic, 10000000000);
