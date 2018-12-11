@@ -1,0 +1,52 @@
+Currency: Dinos
+Intermediary Object: Eggs
+Desired Object: Dinos
+Way to get Dinos: Get Egg from farm, incubate Egg into dino
+Way to get Feed: Trade dinos for feed
+
+What it do:
+Farms: Increase Eggs per second
+Dinos: Currency
+Eggs: Turn into dinos via incubators
+Feed: Allow farms to produce Eggs
+
+Goal: Maximize Dinosaurs
+Currency Item: Dino Scales
+Way to get Currency Item: Scale Farm (Costs dinos + scales)
+Way to get Goal Item: Incubators in farms (Costs scales)
+
+Dino Farm: 
+	Cost: 2 dinos, 10 scales (+3 & +20% scaling)
+	Get: 1 dinos per second, 2 scales per second
+
+Dino Factory:
+	Cost: 50 dinos, 250 scales (+10 & +20% scaling)
+	Get: 10 dinos per second, 20 scales per second
+
+Dino Palace:
+	Cost: 250 dinos, 1,000 scales (+25 & +20% scaling)
+	Get: 50 dinos per second, 100 scales per second
+
+Dino Kingdom:
+	Cost: 1250 dinos, 10000 scales (+100 & +20% scaling)
+	Get: 100 dinos per second, 250 scales per second
+
+Dino Empire:
+	Cost: 10000 dinos, 10x10^4 scales (+1000 & +20% scaling)
+	Get: 1000 dinos per second, 2000 scales per second
+
+Dino Republic:
+	Cost: 1,000,000 dinos, 10x10^7 scales (+10,000 & +20% scaling)
+	Get: 10000 dinos per second, 50000 scales per second
+
+Dino Planet:
+	Cost: 100,000,000 dinos, 10x10^9 scales (+100,0000 & +20% scaling)
+	Get: 100000 dinos per second, 500k scales per second
+
+Dino Galaxy:
+	Cost: 7.2 billion dinos, 72 billion scales (+500m & +20% scaling)
+	Get: 1m dinos per second, 50m scales per second
+
+Dino Intergalactic Federation:
+	Cost: 100 billion dinos
+	Get: Win State

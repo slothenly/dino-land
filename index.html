@@ -8,11 +8,6 @@
         <link rel="stylesheet" type="text/css" href="css-js/stylesheet.css">
         <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-
-
-
-        <!-- Scripts -->
-        <script type="text/javascript" src="css-js/main.js"></script>
     </head>
     <body>
         <div class="full-width">
@@ -20,10 +15,10 @@
                 <img src="media/banner.png" id="title-banner">
             </div>
         </div>
-        <div class="flex-columns">
+        <div class="flex-columns" id="test">
             <div class="buyables-column">
-                <div class="buyables-container">
-                    <div class="buyables-individual">
+                <div class="buyables-container" id="buyables-parent">
+                <!--<div class="buyables-individual">
                         <h1 class="buyables-title">Dino Farm</h1>
                         <div class="buyables-costs">
                             <p class="cost">-2 Dinos</p>
@@ -66,25 +61,25 @@
                             <p>-1 Feed</p>
                             <p>-1 Cost</p>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="play-area">
-                <div class="play-block">
+                <div class="play-block" id="dino-info">
                     <div class="play-info"><p> Dinos: </p></div>
-                    <div class="play-stat"><p> 2967 </p></div>
+                    <div class="play-stat"><p> 0 </p></div>
                 </div>
-                <div class="play-block">
+                <div class="play-block" id="scale-info">
                     <div class="play-info"><p> Scales: </p></div>
-                    <div class="play-stat"><p> 9073 </p></div>
+                    <div class="play-stat"><p> 0 </p></div>
                 </div>
-                <div class="play-block">
+                <div class="play-block" id="dps-info">
                     <div class="play-info"><p> Dinos Per Second: </p></div>
-                    <div class="play-stat"><p> 2698 </p></div>
+                    <div class="play-stat"><p> 1 </p></div>
                 </div>
-                <div class="play-block">
+                <div class="play-block" id="sps-info">
                     <div class="play-info"><p> Scales Per Second: </p></div>
-                    <div class="play-stat"><p> 6812 </p></div>
+                    <div class="play-stat"><p>  </p></div>
                 </div>
                 <div class=play-bonus-items>
                     <h1 class="play-bonus-title">Bonus Items</h1>
@@ -119,5 +114,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Scripts -->
+        <script type="text/javascript" src="css-js/main.js"></script>
     </body>
 </html>
