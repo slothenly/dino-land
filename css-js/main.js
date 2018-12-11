@@ -8,19 +8,29 @@ let sps = 0;
 
 // Get references to specific nodes to adjust and append to
 let buyablesParentNode = document.querySelector("#buyables-parent");
-let dinoNode = document.querySelector(".play-stat:nth-of-type(1)");
-let scalesNode = document.querySelector(".play-stat:nth-of-type(2)");
-let dpsNode = document.querySelector(".play-stat:nth-of-type(3)");
-let spsNode = document.querySelector(".play-stat:nth-of-type(4)");
+let dinoNode = document.querySelector("#dino-info").querySelector(".play-stat");
+let scalesNode = document.querySelector("#scale-info").querySelector(".play-stat");
+let dpsNode = document.querySelector("#dps-info").querySelector(".play-stat");
+let spsNode = document.querySelector("#sps-info").querySelector(".play-stat");
+let clickerNode = document.querySelector("#create-dino");
 
-//create the default dino farm
+// Create the default dino farm
 createNewBuyableEntry("Dino Farm", 10, 0, 1, 2);
+
+// Set up event listener for the clickable dino creation button
+clickerNode.addEventListener("click", addDinos);
 
 // Set up default buyables container
 function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps){
     // Create all HTML sections and set their properties
     let buyablesIndividual = document.createElement("div");
     buyablesIndividual.className = "buyables-individual";
+    buyablesIndividual.setAttribute("data-dCost", dinoCost);
+    buyablesIndividual.setAttribute("data-sCost", scaleCost);
+    buyablesIndividual.setAttribute("data-dBenefit", dps);
+    buyablesIndividual.setAttribute("data-sBenefit", sps);
+    buyablesIndividual.addEventListener("click", addDPS);
+    console.log(buyablesIndividual);
 
     let buyablesTitle = document.createElement("h1");
     buyablesTitle.innerHTML = name;
@@ -45,6 +55,8 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps){
     sBenefit.innerHTML = `+${sps} SPS`;
     sBenefit.className = "benefit";
 
+    // Create an event listener for the div to add dinos based on click
+
     // Append all HTML sections together
     buyablesCosts.appendChild(dCost);
     buyablesCosts.appendChild(sCost);
@@ -58,25 +70,27 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps){
     buyablesParentNode.appendChild(buyablesIndividual);
 }
 
-
 // Main Functions
 /* Functions */
 /* Adds one dino per click */
-function plusDinos(e, howMany = 1){
-    currentDinos += howMany;
-    dinoCount.innerHTML = `${currentDinos}`;
+function addDinos(e, howMany = 1){
+    dinos += howMany;
+    dinoNode.innerHTML = `${dinos}`;
 }
 
 /* Adds however many dinos are in dinosPerSec */
-function plusDinoFarm(){
-    currentDinoCount += 1;
-    dinoCount2.innerHTML = `${currentDinoCount}`;
+function addDPS(e){
+    dinos -= e.target.dataset.dCost; console.log(e.target.dataset);
+    dps += e.target.dataset.dBenefit;
+    scales -= e.target.dataset.sCost;
+    sps += e.target.dataset.sBenefit;
+    dpsNode.innerHTML = `${dinos}`;
 }
 
 /* Removes dinos based on button's cost */
-function plusDinoFarmLarge(){
-    currentDinoCount += dinosPerSec/1000;
-    dinoCount2.innerHTML = `${Math.round(currentDinoCount)}`;
+function calculateDinosAddedLarge(){
+    dinos += dps/100;
+    dinoNode.innerHTML = `${Math.round(currentDinoCount)}`;
 }
 
 /* Increase dinosPerSecond to adjust  */
@@ -92,11 +106,11 @@ function increaseDPS(e){
     /* Adjust the interval to account for dinos currently being created per second */
     clearInterval(currentInterval);
     if (dinosPerSec < 100){
-        currentInterval = setInterval(plusDinoFarm, (100/dinosPerSec));
+        currentInterval = setInterval(addDinos, (100/dps));
     }
     else{
-        currentInterval = setInterval(plusDinoFarmLarge, 10);
+        currentInterval = setInterval(calculateDinosAddedLarge, 10);
     }
 }
 
-let currentInterval = setInterval(plusDinoFarm, 10000000000);
+let currentInterval = setInterval(addDinos, 10000000000);
