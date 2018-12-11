@@ -5,6 +5,9 @@ let dinos = 0;      //amount of dinos the player currently has
 let scales = 0;     //amount of dino scales the player currently has
 let dps = 0;        //dinos generated per second
 let sps = 0;        //scales generated per second
+let dpsScalar = 1;  //scalar for dino generation
+let spsScalar = 1;  //scalar for scale generation
+let buyables = 1; //how many buildables the player has unlocked
 
 // Get references to specific nodes to adjust and append to
 let buyablesParentNode = document.querySelector("#buyables-parent");
@@ -36,8 +39,6 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
     buyablesIndividual.setAttribute("data-dBenefit", dps);
     buyablesIndividual.setAttribute("data-sBenefit", sps);
     */
-
-    console.log(buyablesIndividual);
 
     let buyablesTitle = document.createElement("h1");
     buyablesTitle.innerHTML = name;
@@ -94,7 +95,7 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
     buyablesParentNode.appendChild(buyablesIndividual);
 }
 
-// Dino Adding/Subtracting Functions #region
+// Dino Adding/Subtracting Functions region
 /* Adds one dino per click */
 function addDinosManual(e, howMany=1){
     dinos += howMany;
@@ -119,13 +120,21 @@ function addScalesLarge(e){
 
 }
 
-/* Adds however many dinos are in dinosPerSec */
+/* Adds however many per second are stored in the sender's benefit value */
 function addDPS(e){
     // Adjust internal values based on costs and benefits passed in
     let mainElement = e.target;
     while (mainElement.className != "buyables-individual"){
         mainElement = mainElement.parentElement; //traverse back to the parent container for all elements
     }
+
+    // Check to make sure the player has enough dinos and scales to buy the upgrade
+    if (dinos < mainElement.dataset.dCost || scales < mainElement.dataset.sCost){
+        mainElement.style.backgroundColor = "lightcoral";
+        setTimeout(()=>{mainElement.style.backgroundColor = "#EFEFEF"}, 115)
+        return;
+    }
+
     console.log(mainElement);
     dinos -= parseInt(mainElement.dataset.dCost);
     dps += parseInt(mainElement.dataset.dBenefit);
@@ -134,14 +143,40 @@ function addDPS(e){
 
     // Update the cost of the item
     mainElement.dataset.dCost *= 1 + parseFloat(e.target.dataset.dCostScalar);
-    console.log(e.target.dataset.dCostScalar);
-    console.log( e.target.dataset.dCost);
-    mainElement.dataset.sCost = Math.round( e.target.dataset.sCost * (1 + e.target.dataset.sCostScalar));
+    mainElement.dataset.sCost *= 1 + parseFloat(e.target.dataset.sCostScalar);
 
     // Change the visual display for the user
     updateVisuals(e);
 
     // Reset the intervals based on new numbers
+    updateDinoIntervals();
+
+    // Check if the player should unlock a new level of buildable
+    checkForNewBuyable();
+
+    // Give player a quick visual feedback blip
+    mainElement.style.backgroundColor = "darkseagreen";
+    setTimeout(()=>{mainElement.style.backgroundColor = "#EFEFEF"}, 115)
+}
+
+function checkForNewBuyable(){
+    switch(buyables){
+        case 1:
+            if(dps >= 10){
+                createNewBuyableEntry("Dino Factory", 1000, 7500, 5, 10, 0.4, 0.2);
+                buyables++;
+            }
+            break;
+        case 2:
+            if (dps >= 100){
+                createNewBuyableEntry("Dino Palace", 15000, 25000, 20, 50, 0.3, 0.3)
+                buyables++;
+            }
+            break;
+    }
+}
+
+function updateDinoIntervals(){
     if(dps < 100){
         currentDinoInterval = setInterval(addDinosAutomatic, (100/dps));
     }else{
@@ -153,7 +188,8 @@ function addDPS(e){
         currentDinoInterval = setInterval(addScalesLarge, 10);
     }
 }
-// #endregion
+
+// endregion
 
 /* Update the Screen values */
 function updateVisuals(e){
