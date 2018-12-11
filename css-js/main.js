@@ -5,6 +5,8 @@ let dinos = 0;
 let scales = 0;
 let dps = 0;
 let sps = 0;
+let dpsScalar = 1;
+let spsScalar = 1;
 
 // Get references to specific nodes to adjust and append to
 let buyablesParentNode = document.querySelector("#buyables-parent");
@@ -15,47 +17,71 @@ let spsNode = document.querySelector("#sps-info").querySelector(".play-stat");
 let clickerNode = document.querySelector("#create-dino");
 
 // Create the default dino farm
-createNewBuyableEntry("Dino Farm", 10, 0, 1, 2);
+createNewBuyableEntry("Dino Farm", 10, 0, 1, 2, 0.4, 0.2);
 
 // Set up event listener for the clickable dino creation button
-clickerNode.addEventListener("click", addDinos);
+clickerNode.addEventListener("click", addDinosManual);
 
 // Set up default buyables container
-function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps){
+function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar, sCostScalar){
+    // Create list to hold all elements
+    let elements = [];
+
     // Create all HTML sections and set their properties
     let buyablesIndividual = document.createElement("div");
     buyablesIndividual.className = "buyables-individual";
+    elements.push(buyablesIndividual);
+
+    /*
     buyablesIndividual.setAttribute("data-dCost", dinoCost);
     buyablesIndividual.setAttribute("data-sCost", scaleCost);
     buyablesIndividual.setAttribute("data-dBenefit", dps);
     buyablesIndividual.setAttribute("data-sBenefit", sps);
-    buyablesIndividual.addEventListener("click", addDPS);
+    */
+
     console.log(buyablesIndividual);
 
     let buyablesTitle = document.createElement("h1");
     buyablesTitle.innerHTML = name;
     buyablesTitle.className = "buyables-title";
+    elements.push(buyablesTitle);
 
     let buyablesCosts = document.createElement("div");
     buyablesCosts.className = "buyables-costs";
+    elements.push(buyablesCosts);
 
     let dCost = document.createElement("p");
     dCost.innerHTML = `-${dinoCost} Dinos`;
     dCost.className = "cost";
+    elements.push(dCost);
 
     let sCost = document.createElement("p");
     sCost.innerHTML = `-${scaleCost} Scales`;
     sCost.className = "cost";
+    elements.push(sCost);
 
     let dBenefit = document.createElement("p");
     dBenefit.innerHTML = `+${dps} DPS`;
     dBenefit.className = "benefit";
+    elements.push(dBenefit);
 
     let sBenefit = document.createElement("p");
     sBenefit.innerHTML = `+${sps} SPS`;
     sBenefit.className = "benefit";
+    elements.push(sBenefit);
+
+    // Add the dataset to all elements
+    for(let i=0; i<elements.length; i++){
+        elements[i].dataset.dCost = dinoCost;
+        elements[i].dataset.sCost = scaleCost;
+        elements[i].dataset.dBenefit = dps;
+        elements[i].dataset.sBenefit = sps;
+        elements[i].dataset.dCostScalar = dCostScalar;
+        elements[i].dataset.sCostScalar = sCostScalar;
+    }
 
     // Create an event listener for the div to add dinos based on click
+    buyablesIndividual.addEventListener("click", addDPS);
 
     // Append all HTML sections together
     buyablesCosts.appendChild(dCost);
@@ -73,44 +99,73 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps){
 // Main Functions
 /* Functions */
 /* Adds one dino per click */
-function addDinos(e, howMany = 1){
+function addDinosManual(e, howMany=1){
     dinos += howMany;
-    dinoNode.innerHTML = `${dinos}`;
+    updateVisuals(e);
+}
+
+function addDinosAutomatic(e, howMany=1){
+    dinos += howMany/10;    //dividing neccesary because of update interval
+    updateVisuals(e);
+}
+
+function addDinosLarge(e, howMany=1){
+    dinos += dps/100;
+    updateVisuals(e);
 }
 
 /* Adds however many dinos are in dinosPerSec */
 function addDPS(e){
-    dinos -= e.target.dataset.dCost; console.log(e.target.dataset);
-    dps += e.target.dataset.dBenefit;
-    scales -= e.target.dataset.sCost;
-    sps += e.target.dataset.sBenefit;
-    dpsNode.innerHTML = `${dinos}`;
-}
+    // Adjust internal values based on costs and benefits passed in
+    let mainElement = e.target;
+    while (mainElement.className != "buyables-individual"){
+        mainElement = mainElement.parentElement; //traverse back to the parent container for all elements
+    }
+    console.log(mainElement);
+    dinos -= parseInt(mainElement.dataset.dCost);
+    dps += parseInt(mainElement.dataset.dBenefit);
+    scales -= parseInt(mainElement.dataset.sCost);
+    sps += parseInt(mainElement.dataset.sBenefit);
 
-/* Removes dinos based on button's cost */
-function calculateDinosAddedLarge(){
-    dinos += dps/100;
-    dinoNode.innerHTML = `${Math.round(currentDinoCount)}`;
-}
+    // Update the cost of the item
+    mainElement.dataset.dCost *= 1 + parseFloat(e.target.dataset.dCostScalar);
+    console.log(e.target.dataset.dCostScalar);
+    console.log( e.target.dataset.dCost);
+    mainElement.dataset.sCost = Math.round( e.target.dataset.sCost * (1 + e.target.dataset.sCostScalar));
 
-/* Increase dinosPerSecond to adjust  */
+    // Change the visual display for the user
+    updateVisuals(e);
 
-function increaseDPS(e){
-    console.log(e.target.dataset.added);
-    dinosPerSec += parseFloat(e.target.dataset.added);
-    dinoCounter.innerHTML = `${dinosPerSec}`;
-
-    console.log(dinosPerSec);
-    dinoCounter.innerHTML = `${dinosPerSec}`;
-
-    /* Adjust the interval to account for dinos currently being created per second */
-    clearInterval(currentInterval);
-    if (dinosPerSec < 100){
-        currentInterval = setInterval(addDinos, (100/dps));
+    // Reset the interval based on new numbers
+    if(dps < 100){
+        currentInterval = setInterval(addDinosAutomatic, (100/dps));
     }
     else{
-        currentInterval = setInterval(calculateDinosAddedLarge, 10);
+        currentInterval = setInterval(addDinosLarge, 10);
     }
 }
 
-let currentInterval = setInterval(addDinos, 10000000000);
+/* Update the Screen values */
+function updateVisuals(e){
+    // Update the normal game visuals
+    dinoNode.innerHTML = `${Math.round(dinos)}`;
+    scalesNode.innerHTML = `${Math.round(scales)}`;
+    dpsNode.innerHTML = Math.round(dps * dpsScalar);
+    spsNode.innerHTML = Math.round(sps * spsScalar);
+
+    if (e){
+        // Update the button's visuals
+        let mainElement = e.target;
+        while (mainElement.className != "buyables-individual"){
+            mainElement = mainElement.parentElement; //traverse back to the parent container for all elements
+        }
+        // Update the dino cost & scale cost
+        let dinoCost = mainElement.querySelector(".buyables-costs").querySelector(".cost:nth-of-type(1)");
+        let scaleCost = mainElement.querySelector(".buyables-costs").querySelector(".cost:nth-of-type(2)");
+
+        dinoCost.innerHTML = `-${Math.round(mainElement.dataset.dCost)} Dinos`;
+        scaleCost.innerHTML = `-${Math.round(mainElement.dataset.sCost)} Scales`;
+    }
+}
+
+let currentInterval = setInterval(addDinosAutomatic, 10000000000);
