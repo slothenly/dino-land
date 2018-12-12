@@ -64,6 +64,10 @@
     background-color: darkseagreen;
 }
 
+i{
+    transition: 0.2s;
+}
+
 .buyables-title{
     flex-grow: 3;
     align-self: center;

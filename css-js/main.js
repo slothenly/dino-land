@@ -16,6 +16,8 @@ let scalesNode = document.querySelector("#scale-info").querySelector(".play-stat
 let dpsNode = document.querySelector("#dps-info").querySelector(".play-stat");
 let spsNode = document.querySelector("#sps-info").querySelector(".play-stat");
 let clickerNode = document.querySelector("#create-dino");
+let bonusParentNode = document.querySelector(".play-bonuses");
+let bonusDescriptionNode = document.querySelector("#bonus-item-description");
 
 // Create the default dino farm
 createNewBuyableEntry("Dino Farm", 10, 0, 1, 2, 0.4, 0.2);
@@ -95,7 +97,7 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
     buyablesParentNode.appendChild(buyablesIndividual);
 }
 
-// Dino Adding/Subtracting Functions region
+// ### Main Dino Functions ### region
 /* Adds one dino per click */
 function addDinosManual(e, howMany=1){
     dinos += howMany;
@@ -219,6 +221,76 @@ function updateDinoIntervals(){
 }
 
 // endregion
+
+// ### Bonus Item Functions ### #region
+function updateDPSScalar(scalar){
+    dpsScalar *= scalar;
+}
+
+function updateSPSScalar(scalar){
+    spsScalar *= scalar;
+}
+
+function createBonusItem(className, flavorText, cost, dBenefit, sBenefit){
+    // Create the two elements and assign their values
+    let holder = document.createElement("div");
+    holder.className = "play-bonus";
+    holder.addEventListener("click", activateBonusItem);
+    holder.dataset.cost = cost;
+    holder.dataset.dpsScalar = dBenefit;
+    holder.dataset.spsScalar = sBenefit;
+
+    let icon = document.createElement("i");
+    icon.className = `${className}`;
+    icon.dataset.flavorText = `${flavorText}`;
+    icon.addEventListener("mouseover", displayFlavorText);
+    icon.addEventListener("click", activateBonusItem);
+    icon.dataset.cost = cost;
+
+    // Append elements
+    holder.appendChild(icon);
+    bonusParentNode.appendChild(holder);
+    console.log(holder);
+}
+
+function displayFlavorText(e){
+    bonusDescriptionNode.innerHTML = `${e.target.dataset.flavorText}<br>Cost: ${e.target.dataset.cost} Scales`;
+}
+
+function activateBonusItem(e){
+    // Make sure this event is only called once
+    e.stopPropagation();
+
+    console.log(e.target.dataset.cost);
+    console.log(scales);
+    // Check that the player has enough scales to pay for the upgrade
+    if (scales < e.target.dataset.cost){
+        e.target.style.color = "red";
+        setTimeout(()=>{e.target.style.color = "black"}, 150)
+        return;
+    }
+
+    // Traverse to the holder node
+    let holder = e.target;
+    if (holder.className != "play-bonus"){
+        holder = holder.parentElement;
+    }
+    // Apply the effect of the item
+    if (holder.dataset.dpsScalar > 1){
+        updateDPSScalar(holder.dataset.dpsScalar);
+    }
+    if (holder.dataset.spsScalar > 1){
+        updateSPSScalar(holder.dataset.spsScalar);
+    }
+
+    // Clear bonus item description and remove the item from the bonuses section
+    bonusDescriptionNode.innerHTML = "";
+    holder.parentElement.removeChild(holder);
+}
+
+createBonusItem("fab fa-algolia", "Dino production takes half as long", 100, 2, 0);
+
+// #endregion
 
 /* Update the Screen values */
 function updateVisuals(e){
