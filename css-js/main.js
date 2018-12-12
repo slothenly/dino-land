@@ -103,21 +103,21 @@ function addDinosManual(e, howMany=1){
 }
 
 function addDinosAutomatic(e, howMany=1){
-    dinos += howMany/10;    //dividing neccesary because of update interval
+    dinos += (howMany * dpsScalar)/10;    //dividing neccesary because of update interval
     updateVisuals(e);
 }
 
 function addDinosLarge(e, howMany=1){
-    dinos += dps/100;
+    dinos += (dps * dpsScalar)/100;
     updateVisuals(e);
 }
 
 function addScalesAutomatic(e, howMany=1){
-    scales += howMany/10;
+    scales += (howMany * spsScalar)/10;
 }
 
 function addScalesLarge(e){
-
+    scales += (sps * spsScalar)/100;
 }
 
 /* Adds however many per second are stored in the sender's benefit value */
@@ -160,16 +160,42 @@ function addDPS(e){
 }
 
 function checkForNewBuyable(){
+
+    // Switch for all left-column buyables
     switch(buyables){
         case 1:
-            if(dps >= 10){
+            if (dps >= 10){
                 createNewBuyableEntry("Dino Factory", 1000, 7500, 5, 10, 0.4, 0.2);
                 buyables++;
             }
             break;
         case 2:
             if (dps >= 100){
-                createNewBuyableEntry("Dino Palace", 15000, 25000, 20, 50, 0.3, 0.3)
+                createNewBuyableEntry("Dino Republic", 15000, 25000, 50, 65, 0.3, 0.3);
+                buyables++;
+            }
+            break;
+        case 3:
+            if (dps >= 500){
+                createNewBuyableEntry("Dino Dynasty", 50000, 65000, 100, 120, 0.25, 0.25);
+                buyables++;
+            }
+            break;
+        case 4:
+            if (dps >= 1000){
+                createNewBuyableEntry("Dino Planet", 150000, 180000, 250, 400, 0.2, 0.2);
+                buyables++;
+            }
+            break;
+        case 5:
+            if (dps >= 2500){
+                createNewBuyableEntry("Dino Galaxy", 500000, 750000, 1500, 2500, 0.2, 0.2)
+                buyables++;
+            }
+            break;
+        case 6:
+            if (dps >= 10000){
+                createNewBuyableEntry("Dino Intergalactic Federation", 1000000, 1500000, 1, 1, 1, 1)
                 buyables++;
             }
             break;
@@ -177,15 +203,18 @@ function checkForNewBuyable(){
 }
 
 function updateDinoIntervals(){
+    // Update scale intervals
+    if(sps < 100){
+        currentScaleInterval = setInterval(addScalesAutomatic, (100/sps));
+    }else{
+        currentScaleInterval = setInterval(addScalesLarge, 10);
+    }
+
+    // Update dino intervals and the display
     if(dps < 100){
         currentDinoInterval = setInterval(addDinosAutomatic, (100/dps));
     }else{
         currentDinoInterval = setInterval(addDinosLarge, 10);
-    }
-    if(sps < 100){
-        currentScaleInterval = setInterval(addScalesAutomatic, (100/sps));
-    }else{
-        currentDinoInterval = setInterval(addScalesLarge, 10);
     }
 }
 
