@@ -1,13 +1,15 @@
 /* JavaScript */
 
 // Main variables to keep track of and modify
-let dinos = 0;      //amount of dinos the player currently has
-let scales = 0;     //amount of dino scales the player currently has
-let dps = 0;        //dinos generated per second
-let sps = 0;        //scales generated per second
-let dpsScalar = 1;  //scalar for dino generation
-let spsScalar = 1;  //scalar for scale generation
-let buyables = 1; //how many buildables the player has unlocked
+let dinos = 0;          //amount of dinos the player currently has
+let scales = 0;         //amount of dino scales the player currently has
+let dps = 0;            //dinos generated per second
+let sps = 0;            //scales generated per second
+let dpsScalar = 1;      //scalar for dino generation
+let spsScalar = 1;      //scalar for scale generation
+let buyables = 1;       //how many buyables the player has unlocked
+let bonusItems = 1;     //how many bonus items the player has unlocked
+let consoleEntries = 1; //how many entries have been logged in the pseudoconsole
 
 // Get references to specific nodes to adjust and append to
 let buyablesParentNode = document.querySelector("#buyables-parent");
@@ -18,9 +20,17 @@ let spsNode = document.querySelector("#sps-info").querySelector(".play-stat");
 let clickerNode = document.querySelector("#create-dino");
 let bonusParentNode = document.querySelector(".play-bonuses");
 let bonusDescriptionNode = document.querySelector("#bonus-item-description");
+let consoleNode = document.querySelector(".console-entries");
+
+// Tell the player the world is set up
+logToConsole("Dinoland successfully created. Click the large button to the left to begin spawning dinos.");
 
 // Create the default dino farm
 createNewBuyableEntry("Dino Farm", 10, 0, 1, 2, 0.4, 0.2);
+
+// Create the default bonus items
+createBonusItem("fab fa-algolia", "Dino production takes half as long", 100, 2, 0);
+createBonusItem("fas fa-brush", "Scales are prettier, they're worth 50% more.", 150, 1.5, 0);
 
 // Set up event listener for the clickable dino creation button
 clickerNode.addEventListener("click", addDinosManual);
@@ -34,13 +44,6 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
     let buyablesIndividual = document.createElement("div");
     buyablesIndividual.className = "buyables-individual";
     elements.push(buyablesIndividual);
-
-    /*
-    buyablesIndividual.setAttribute("data-dCost", dinoCost);
-    buyablesIndividual.setAttribute("data-sCost", scaleCost);
-    buyablesIndividual.setAttribute("data-dBenefit", dps);
-    buyablesIndividual.setAttribute("data-sBenefit", sps);
-    */
 
     let buyablesTitle = document.createElement("h1");
     buyablesTitle.innerHTML = name;
@@ -95,6 +98,8 @@ function createNewBuyableEntry(name, dinoCost, scaleCost, dps, sps, dCostScalar,
 
     // Append the newly made individual box to the parent node
     buyablesParentNode.appendChild(buyablesIndividual);
+
+    logToConsole(`${name} now available for development.`)
 }
 
 // ### Main Dino Functions ### region
@@ -197,10 +202,57 @@ function checkForNewBuyable(){
             break;
         case 6:
             if (dps >= 10000){
-                createNewBuyableEntry("Dino Intergalactic Federation", 1000000, 1500000, 1, 1, 1, 1)
+                createNewBuyableEntry("Dino Galactic Federation", 1000000, 1500000, 1, 1, 1, 1)
                 buyables++;
             }
             break;
+    }
+
+    // Switch for all bonus items
+    switch(bonusItems){
+        case 1:
+            if (dps >= 10){
+                createBonusItem("fas fa-balance-scale", "Feed your dinos a balanced breakfast and they're scale production increases by 20%", 5000, 0, 1.2);
+                bonusItems++;
+            }
+            break;
+        case 2:
+            if (sps >= 50){
+                createBonusItem("far fa-handshake", "Make a deal with the Dino union, dinosaurs reproduce 35% faster.", 15000, 1.35, 0);
+                bonusItems++;
+            }
+            break;
+        case 3:
+            if (dps >= 50){
+                createBonusItem("fas fa-compact-disc", "Sweet jams make dinos hatch more children and drop more scales. Dinos boogey-down 15% more and drop 15% more scales", 20000, 1.15, 1.15);
+                bonusItems++;
+            }
+
+            break;
+        case 4:
+            if (dps >= 100 & sps >= 150){
+                createBonusItem("fas fa-frog", "Dinos think frogs are cute. They shake with excitement when they see frogs. +40% scale rate", 30000, 0, 1.4);
+                bonusItems++;
+            }
+            break;
+        case 5:
+            if (dps >= 500){
+                createBonusItem("fas fa-atom", "Genetically engineer extra fertility and scale drops. x3 dinos per second, x2.5 scales per second", 45000, 3, 2.5);
+                bonusItems++;
+            }
+            break;
+        case 6:
+            if (dps >= 1000){
+                createBonusItem("fas fa-fighter-jet", "Run jets overhead at the speed of sound so more scales fall off. +40% scale rate", 30000, 0, 1.4);
+                bonusItems++;
+            }
+
+            break;
+        case 7:
+            if(sps >= 1800){
+                createBonusItem("fas fa-dungeon", "Underground cave network of dinos created. Breeding triples for some reason, we don't know why.", 30000, 3, 0);
+                bonusItems++;
+            }
     }
 }
 
@@ -250,7 +302,8 @@ function createBonusItem(className, flavorText, cost, dBenefit, sBenefit){
     // Append elements
     holder.appendChild(icon);
     bonusParentNode.appendChild(holder);
-    console.log(holder);
+
+    logToConsole("New bonus item available in the store!");
 }
 
 function displayFlavorText(e){
@@ -261,8 +314,6 @@ function activateBonusItem(e){
     // Make sure this event is only called once
     e.stopPropagation();
 
-    console.log(e.target.dataset.cost);
-    console.log(scales);
     // Check that the player has enough scales to pay for the upgrade
     if (scales < e.target.dataset.cost){
         e.target.style.color = "red";
@@ -288,9 +339,27 @@ function activateBonusItem(e){
     holder.parentElement.removeChild(holder);
 }
 
-createBonusItem("fab fa-algolia", "Dino production takes half as long", 100, 2, 0);
-
 // #endregion
+
+// ### Pseudo-Console Functions ### region
+
+function logToConsole(message){
+    // Create the element and set its properties
+    let entry = document.createElement("p");
+    entry.className = "console-entry";
+    entry.innerHTML = `${consoleEntries}: ${message}`;
+    consoleEntries++;
+
+    // Append the element at the top level of the console
+    let topLvlNode = document.querySelector(".console-entry");
+    if (topLvlNode){
+        consoleNode.insertBefore(entry, topLvlNode);
+    } else {
+        consoleNode.appendChild(entry);
+    }
+}
+
+// endregion
 
 /* Update the Screen values */
 function updateVisuals(e){
